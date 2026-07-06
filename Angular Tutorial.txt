@@ -1,0 +1,985 @@
+Angular Tutorial:
+
+Step 1 - Understand Angular Structure
+
+src
+ │
+ ├── app
+ │     ├── app.component.ts
+ │     ├── app.component.html
+ │     └── app.component.css
+ │
+ └── main.ts
+
+app.component.ts
+       ↓
+Code
+
+app.component.html
+       ↓
+UI
+
+app.component.css
+       ↓
+Styling
+
+Angular Startup Flow
+
+main.ts
+    ↓
+app.component.ts
+    ↓
+app.component.html
+    ↓
+Browser UI
+
+Interpolation is a one-way data binding feature in Angular represented by double curly braces {{ }}. It is used to display TypeScript component properties and expressions inside HTML templates.
+
+Angular Concept #3 – Two-Way Data Binding
+
+UI  ⇄  TypeScript Variable
+
+What is Two-Way Data Binding?
+Answer:
+
+Two-Way Data Binding keeps the UI and component property synchronized. Angular implements it using [(ngModel)]. Any change in the input control updates the component property and any change in the component property automatically updates the UI.
+
+Angular Login Form2        ↓3Username4Password5Login Button6        ↓7JWT API Call
+
+What is a Directive?
+A directive changes the behaviour or appearance of HTML elements.
+<p *ngIf="true">
+    Visible
+</p>
+2. *ngIf
+
+appp.ts
+
+export class AppComponent {
+
+  isLoggedIn = true;
+
+}
+
+<h2>Angular Directives</h2>
+
+<p *ngIf="isLoggedIn">
+  Welcome Pradeep
+</p>
+
+Toggle Example
+isLoggedIn = false;
+
+app.ts
+toggleLogin() {
+  this.isLoggedIn = !this.isLoggedIn;
+}
+app.html
+<button (click)="toggleLogin()">
+ *Toggle
+</button>
+
+<p *ngIf="isLogg*dIn">
+  Welcome User
+</p>
+3. *ngIf with Else
+app.html
+<div *ngIf="i*LoggedIn; else loginBlock">
+  Welc*me User
+</div>
+
+<ng-template #logi*Block>
+  Please Login
+</ng-templat*>
+
+isLoggedIn = true;
+
+4. *ngFor
+
+products =*[
+  'Laptop',
+  'Mobile',
+  'Mouse*
+];
+
+<ul>*  <li *ngFor="let product of produ*ts">
+    {{ product }}
+  </li>
+</u*>
+Objects Example
+
+orders= [
+  {
+    id: 1,
+    customer: '*radeep',
+    quantity: 2
+  },
+  {
+   id: 2,
+    customer: 'John',
+   quantity: 5
+  }
+];
+<table border="1">
+
+  <tr>
+    <th>Id</th>
+    <th>Customer</th>
+    <th>Quantity</th>
+  </tr>
+
+  <tr *ngFor="let order of orders">
+    <td>{{order.id}}</td>
+    <td>{{order.customer}}</td>
+    <td>{{order.quantity}}</td>
+  </tr>
+
+</table>
+5. Index in *ngFor
+
+<tr *ngFor="let order of orders; let i = index">
+  <td>{{i + 1}}</td>
+  <td>{{order.customer}}</td>
+</tr>
+6. *ngSwitch
+
+role = 'Admin';
+
+<div [ngSwitch]="role">*
+  <p *ngSwitchCase="'Admin'">
+     Admin Dashboard
+  </p>
+
+  <p *ngSwitchCase="'User'">
+      User Dashboard
+  </p>
+
+  <p *ngSwitchDefaul*>
+      Guest
+  </p>
+
+</div>
+
+<tr *ngFor="let order of orders">
+
+  <td>{{order.orderId}}</td>
+
+  <td>
+    <span *ngIf="order.status == 'Completed'">
+        ✅ Completed
+    </span>
+
+    <span *ngIf="order.status == 'Pending'">
+        ⏳ Pending
+    </span>
+  </td>
+
+</tr>
+
+What is a Pipe?
+A Pipe transforms data in the UI without changing the original value.
+
+
+1. Uppercase Pipe
+<h2>{{ name | uppercase }}</h2>
+<h2>{{ name | lowercase }}</h2>
+<h2>{{ name | titlecase }}</h2>name = 'pradeep panigrahi'; Pradeep Panigrahi
+{{ today | date }}
+{{ today | date:'dd/MM/yyyy' }}
+{{ today | date:'dd/MM/yyyy HH:mm:ss' }}
+{{ price | currency }}
+{{ discount | percent }}
+{{ amount | number:'1.2-2' }}
+student = {
+  id: 1,
+  name: 'Pradeep'
+};
+{{ student | json }}
+
+{
+  "id": 1,
+  "name": "Pradeep"
+}
+chaining pipes
+{{ name | uppercase | lowercase }}
+
+Why is ngOnInit preferred over Constructor?
+Reason:
+Angular has completed component initialization.
+
+Lifecycle Flow Diagram
+
+Component Created
+       │
+       ▼
+constructor()
+       │
+       ▼
+ngOnInit()
+       │
+       ▼
+HTML Rendered
+       │
+       ▼
+ngAfterViewInit()
+       │
+       ▼
+User Interaction
+       │
+       ▼
+ngDoCheck()
+       │
+       ▼
+ngAfterViewChecked()
+       │
+   (repeat)
+       │
+       ▼
+Navigate Away
+       │
+       ▼
+ngOnDestroy()
+
+constructor()      // DI
+
+ngOnInit()         // Call Web API
+
+ngOnChanges()      // Parent -> Child updates
+
+ngOnDestroy()      // Cleanup subscriptions
+
+How do components communicate in Angular?
+Answer:
+
+Parent to Child using @Input()
+Child to Parent using @Output() and EventEmitter
+Unrelated Components using a Shared Service (we'll learn this when we start Services & Dependency Injection).
+
+How can components communicate in Angular?
+
+@Input() → Parent to Child
+@Output() → Child to Parent
+Shared Service → Sibling or unrelated components
+Service + RxJS Observable/BehaviorSubject → Most common enterprise approach
+
+Question
+How do you call a Microservice from Angular?
+Answer
+
+Angular uses the HttpClient service from @angular/common/http to make asynchronous HTTP requests (AJAX calls) to backend APIs or microservices. Typically, we encapsulate the API calls inside Angular Services and consume them from Components using RxJS Observables and subscribe().
+
+If an interviewer asks:
+
+"Which Pipe should we use generally?"
+
+Your answer:
+
+"Pure Pipes should be used by default because they are more performant. Impure Pipes run during every change detection cycle and should only be used when we need to detect mutations within objects or arrays whose references do not change."
+
+Angular  .NET
+Component Controller/View
+Service  Business Service
+@Injectable  Service Registration
+constructor injection Constructor Injection
+providedIn:'root'Singleton  Lifetime
+HttpClient HttpClient
+
+Component Needs CounterService
+        ↓
+DI Container Checks Registry
+        ↓
+CounterService Found
+        ↓
+Create Instance
+        ↓
+Inject Into Constructor
+
+What is Dependency Injection?
+
+Dependency Injection is a design pattern where Angular creates and supplies required objects to a class instead of the class creating them itself.
+Benefits:
+
+Form
+   ↓
+OrderService
+   ↓
+Store orders in memory
+   ↓
+Display Order List below form
+Loose Coupling
+
+Reusability
+
+Testability
+
+Maintainability
+
+Centralised Object Creation
+
+What is RouterLink?
+RouterLink is a directive used for navigation between routes in an Angular application.
+
+RouterLink is an Angular directive used to navigate between routes without reloading the entire page. It works with Angular Router to provide SPA (Single Page Application) navigation.
+
+What is RouterOutlet?
+RouterOutlet is a placeholder where Angular dynamically loads components based on the current route.
+
+RouterOutlet is a directive that acts as a placeholder in the view where Angular dynamically renders the component associated with the active route.
+
+If an interviewer asks:
+"Explain RouterLink and RouterOutlet."
+You can answer:
+
+RouterLink is used to navigate between Angular routes, while RouterOutlet acts as a placeholder where the routed component is rendered. RouterLink is similar to ActionLink in ASP.NET MVC, and RouterOutlet is similar to RenderBody in a Razor Layout.
+
+Why do we use an empty path route?
+
+{
+  path: '',
+  redirectTo: 'create-order',
+  pathMatch: 'full'
+}
+
+An empty path route acts as the default route of the application. When users access the root URL, Angular automatically redirects them to a designated page such as Home, Dashboard, Login, or Create Order.
+
+Why pathMatch: 'full'?
+Match only when the entire URL path is empty.
+
+How to add a 404 Not Found route
+{
+  path: '**',
+  component: NotFoundComponent
+}
+'**'
+Match anything
+that was not matched earlier
+
+Very Important Rule
+{
+  path: '**',
+  component: NotFoundComponent
+}
+
+How do you implement a 404 page in Angular?
+
+Angular provides a wildcard route ('**') that matches any URL not handled by previous routes. We typically map it to a NotFoundComponent and place it as the last route in the routing configuration.
+
+What is HttpClient?
+
+HttpClient is an Angular service used to communicate with backend APIs using HTTP methods such as GET, POST, PUT and DELETE.
+
+What does HttpClient return?
+
+HttpClient returns an Observable.
+
+How do we get data from an Observable?
+
+By using the subscribe() method.
+
+What is subscribe()?
+
+subscribe() is used to receive data from an Observable. HttpClient methods return Observables, and subscribe() allows us to handle successful responses, errors, and completion events.
+
+Explain HttpClient and subscribe in Angular."
+You can now confidently explain:
+
+HttpClient returns an Observable. An Observable is a stream that may produce data in the future. We use subscribe() to listen for that data. The next callback handles successful responses and the error callback handles failures such as network or server errors.
+
+What is ngOnInit?
+
+ngOnInit is an Angular lifecycle hook that is called once after Angular has initialised the component. It is commonly used to load data, call APIs and perform component initialisation.
+
+What is ngOnInit?
+
+Lifecycle hook called once after Angular initialises the component. Commonly used for loading data and calling APIs.
+
+Why avoid any?
+any disables TypeScript type checking.
+
+Explain JWT in Angular.
+
+Your answer is already enough:
+
+User logs in → API returns JWT → Token stored in local storage → Route Guards protect pages → HTTP Interceptor automatically attaches Bearer token in every request → .NET validates token before allowing access.
+
+
+Login
+   ↓
+Token Stored
+   ↓
+User Opens Order List
+   ↓
+Guard Executes
+   ↓
+Token Found?
+   ↓
+Yes → Enter Page
+No  → Redirect Login
+
+1. Auth Guard
+Is user logged in?
+2. Role Guard
+Admin
+Manager
+User
+Auditor
+3. Permission Guard
+Create Order
+Delete Order
+View Reports
+Create Order
+Delete Order
+View Reports
+
+What is an Angular Guard?
+
+Angular Guards are used to control navigation between routes. They execute before a route is activated and determine whether the user is allowed to access the route. They are commonly used for authentication, role-based access and permission checks. Guards are conceptually similar to ASP.NET Core Authorize Attributes.
+canActivate: [authGuard] on the routs
+Username: emilys
+Password: emilyspass
+Custom Pipes
+    ↓
+Services
+    ↓
+Dependency Injection (DI)
+    ↓
+Routing
+    ↓
+HTTP Client
+    ↓
+Login Page
+    ↓
+JWT Authentication
+Route Guards
+    ↓
+Guards
+    ↓
+Interceptors
+    ↓
+Create Order
+    ↓
+Order List
+    ↓
+.NET 8 Microservices Integration
+
+✅ Project Structure
+✅ Components
+✅ Data Binding
+✅ Two-Way Binding
+✅ Lifecycle Hooks
+✅ @Input / @Output
+✅ Services Communication Concept
+✅ Pipes & Custom Pipes
+
+⬇ NEXT
+
+16. Angular Services
+
+⬇
+
+17. Dependency Injection (DI)
+
+⬇
+
+18. HttpClient
+
+⬇
+
+19. Calling .NET 8 APIs
+
+⬇
+
+20. Routing
+
+⬇
+
+21. Forms
+   - Template Driven
+   - Reactive Forms
+
+⬇
+
+22. JWT Authentication
+
+⬇
+
+23. Route Guards
+
+⬇
+
+24. Full Order Management Application
+
+Sunday
+------
+✅ JWT
+✅ Guards
+✅ Interceptors
+✅ Create Order
+✅ Order List
+
+Monday
+------
+✅ .NET Integration
+✅ Reactive Forms
+✅ Angular Material
+✅ Deployment
+✅ Full Architecture Review
+✅ Interview Questions
+
+Graduation Day 🎓😎
+
+Angular 20
+     ↓
+JWT Authentication
+     ↓
+Auth Interceptor
+     ↓
+OrderService (.NET 8)
+     ↓
+SQL Server
+
+     ↓
+
+RabbitMQ
+     ↓
+InventoryService
+     ↓
+PaymentService
+
+     ↓
+
+Success
+---------
+Completed
+
+Failure
+---------
+Cancelled
+
+Revision:
+Angular Architecture
+
+Components
+   ↓
+Templates
+   ↓
+Data Binding
+   ↓
+Directives
+   ↓
+Forms
+   ↓
+Services
+   ↓
+Dependency Injection
+   ↓
+Routing
+Lazy Loading
+Without Lazy Loading:
+All downloaded at startup.
+Large bundle.
+Slow application.
+Login
+Orders
+Products
+Reports
+Dashboard
+
+With Lazy Loading:
+
+Login Page Only
+      ↓
+User Opens Orders
+      ↓
+Download Orders Module
+Much faster.
+Q2 What is RouterOutlet?
+Placeholder where routed components are rendered.
+Difference between RouterLink and Router.navigate()?
+<a routerLink="/orders">
+this.router.navigate(['/orders']);
+Code navigation.
+template navigation.
+Q4 
+What is pathMatch:'full'?
+{ path:'**' }
+Handles invalid URLs.
+Ensures complete URL matching.
+How do you handle Route Parameters in Angular?
+/orders/101
+/orders/102
+/orders/103
+
+{
+   path: 'orders/:id',
+   component: OrderDetailsComponent
+}
+<a [routerLink]="['/orders', 101]">
+   View Order
+</a>
+   ↓
+HttpClient
+Difference between Promise and Observable?
+Promise  Observable
+Single value Multiple values
+Cannot cancel Can cancel
+No operators RxJS operators
+   ↓
+Observables (RxJS)
+   ↓
+Interfaces
+   ↓
+JWT Authentication
+   ↓
+Guards
+   ↓
+Interceptors
+
+What is Dependency Injection?
+
+What are Observables?
+
+Why HttpClient returns Observable?
+
+What are Guards?
+
+What are Interceptors?
+
+Pure vs Impure Pipes?
+
+Template Driven vs Reactive Forms?
+
+Angular Lifecycle Methods?
+
+Standalone Components?
+
+Part 2 – Microservices Revision (45–60 min)
+
+Monolith
+    vs
+Microservices
+
+Synchronous
+    vs
+Asynchronous
+
+REST
+RabbitMQ
+
+API Gateway
+
+CQRS
+
+MediatR
+
+FluentValidation
+
+Serilog
+
+JWT
+
+Docker
+
+Docker Compose
+
+SQL Server
+
+Saga Pattern
+
+✅ Saga Pattern
+Advanced Level.
+Next:
+
+Event Sourcing
+
+Outbox Pattern
+
+Inbox Pattern
+
+Distributed Caching (Redis)
+
+Circuit Breaker (Polly)
+
+Idempotency
+
+Dead Letter Queue
+
+Health Checks
+
+OpenTelemetry
+
+Distributed Tracing
+
+API Versioning
+
+AngularAdvanced.
+Reactive Forms
+
+Custom Validators
+
+Lazy Loading
+
+Resolvers
+
+State Management
+
+NgRx (high level only)
+
+Signals
+
+Standalone Architecture Best Practices
+
+Interview Questions:
+Difference between Constructor and ngOnInit?
+Constructor is used for dependency injection and object creation, whereas ngOnInit is used for component initialisation and data loading.
+
+Why use ngOnDestroy?
+To clean up resources, unsubscribe Observables, stop timers and prevent memory leaks.
+
+When should ViewChild be accessed?
+nside ngAfterViewInit because the component view is fully initialised.
+
+Constructor = Dependency Injection, ngOnInit = Load Data, ngAfterViewInit = Access UI Elements, ngOnDestroy = Cleanup Resources.
+Component Communication
+Parent to Child through @Input()
+Parent 
+<app-product
+ [productName]="name">
+</app-product>
+Child
+@Input()
+productName:string='';
+Child to Parent
+Using @Output()
+@Output()
+saveClicked = new EventEmitter();
+
+Standalone Components are Angular components that do not require an NgModule declaration. They manage their own dependencies through the imports property and are the recommended approach in Angular 17+.
+Type Of Selectors.
+Used as a custom HTML tag.
+Angular supports
+Element Selector
+Attribute Selector
+Class Selector
+
+Component Communication
+
+@Input()          Parent → Child
+@Output()         Child → Parent
+Service           Any Component
+BehaviorSubject   Reactive Communication
+ViewChild         Parent Access Child
+Route Params      Navigation Data
+NgRx              Enterprise State Management
+
+Types of Templates
+1. External Template (Most Common)
+
+@Component({
+  templateUrl:'./login.component.html'
+})
+2. Inline Template
+@Component({
+ template: `
+   <h2>Login Page</h2>
+ `
+})
+ng-template
+<ng-template #loading>
+   Loading...
+</ng-template>
+Template exists but Angular doesn't render it immediately.
+Rendered when needed.
+<div *ngIf="isLoaded;else loading">
+ng-container
+<ng-containe* *ngIf="isVisible">
+
+   <h2>Hello<*h2>
+
+</ng-container>
+ng-content (Content Projection)
+Allows parent component HTML to be projected into child component.
+<app-card>
+
+  <h2>Welcome Guru Ji</h2>
+</app-card>
+What is ng-template?
+Reusable template that is not rendered until required.
+What is ng-container?
+Logical container that does not create additional DOM elements.
+What is ng-content?
+Used for content projection (similar to reusable layout placeholders).
+Data Binding
+What is Interpolation?
+Answer:
+
+Interpolation is used to display data from the component into the HTML template using double
+ curly braces.
+What does [(ngModel)] do internally?
+[property]
++
+(event)
+[value]="username"
+(input)="username=$event.target.value"
+What module is required for ngModel?
+FormsModule
+What is FormsModule?
+FormsModule is an Angular module that provides support for:
+✅ Template Driven Forms
+✅ ngModel
+✅ Form Validation
+✅ Two-Way Data Binding
+Without importing FormsModule, Angular will not recognise:
+
+   ↓
+Directives
+
+Types of Directives
+1. Component Directives
+2. Structural Directives
+3. Attribute Directives
+
+1. Component Directive
+Every Angular Component is actually a Directive with a Template.
+@Component({
+ selector:'app-login'
+})
+export class LoginComponent {}
+2. Structural Directives
+How to improve ngFor performance?
+using trackBy
+
+3. Attribute Directives
+Attribute Directives change appearance or behaviour.
+They do NOT add/remove elements.
+ngClass
+<div [ngClass]="{
+ 'error': isError
+}">
+ Error Message
+</div>
+<div
+ [ngStyle]="{'font-size':fontSize}">
+ Hello
+</div>
+   ↓
+Forms 🔥10      ↓11Template Driven Forms12      ↓13Reactive Forms14      ↓15Validation16      ↓17Template Driven vs Reactive Forms
+   ↓
+Services
+Services can be used to share data between components. A singleton service stores shared state, and RxJS Subjects or BehaviorSubjects can be used to notify multiple components when data changes.
+
+If asked:
+
+What is the difference between a Service and a Factory?
+
+Give this answer:
+
+A Service is a reusable class containing business logic and is managed by Angular Dependency Injection. A Factory is a function responsible for creating and configuring an object before it is injected. Services are commonly used for application logic, while factories are used when instance creation requires custom logic or runtime configuration.
+
+Q: Why is BehaviorSubject preferred over a normal variable in a shared service?
+A:
+Because it pushes updates automatically to all subscribed components and supports reactive programming using RxJS.
+That BehaviorSubject concept will become crystal clear when we reach our next topic:
+
+Difference between providedIn: 'root' and providers: []
+
+Angular automatically registers the service globally.
+@NgModule({
+  providers:[OrderService]
+})
+export class AppModule {
+}
+
+Angular creates service at that injector level.
+@NgModule({
+  providers:[OrderService]
+})
+export class AppModule {
+}
+
+Current Week
+------------
+Angular Revision
+Microservices Revision
+
+Next
+------------
+Azure OpenAI
+
+Then
+------------
+Embeddings
+
+Then
+------------
+Azure AI Search
+
+Then
+------------
+RAG
+
+Then
+------------
+Azure AI Foundry
+
+Then
+------------
+Prompt Flow
+
+Then
+------------
+Agents
+
+Then
+------------
+Copilot Studio
+
+Then
+------------
+AI Architecture Patterns
+
+Then
+------------
+Azure Infrastructure Revision
+   ↓
+Dependency Injection
+   ↓
+Routing
+   ↓
+HttpClient
+   ↓
+Observables (RxJS)
+   ↓
+Interfaces
+   ↓
+JWT Authentication
+   ↓
+Guards
+   ↓
+Interceptors
+
+What is Dependency Injection?
+
+What are Observables?
+
+Why HttpClient returns Observable?
+
+What are Guards?
+
+What are Interceptors?
+
+Pure vs Impure Pipes?
+
+Template Driven vs Reactive Forms?
+
+Angular Lifecycle Methods?
+
+Standalone Components?
+
+
+
+
+
+
+
+

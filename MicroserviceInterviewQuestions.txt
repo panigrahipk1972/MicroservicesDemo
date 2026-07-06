@@ -1,0 +1,80 @@
+
+
+Microservices typically communicate using synchronous or asynchronous patterns. Synchronous communication uses REST APIs, gRPC, or GraphQL where one service waits for another service's response. Asynchronous communication uses messaging platforms such as RabbitMQ, Kafka, Azure Service Bus, or event-driven patterns where a service publishes events and consumers process them independently. In enterprise applications, both patterns are commonly used together. Real-time operations often use HTTP/gRPC, while business workflows such as order processing and notifications use events and message brokers
+
+Need Immediate Answer?
+        ↓
+REST / gRPC
+
+Can Be Processed Later?
+        ↓
+RabbitMQ / Kafka
+
+                ┌─────────────────┐
+                │   RabbitMQ      │
+                │    Exchange     │
+                └────────┬────────┘
+                         │
+        ┌────────────────┼────────────────┐
+        │                │                │
+        ▼                ▼                ▼
+
+ ┌────────────┐   ┌─────────────┐   ┌──────────────┐
+ │ Inventory  │   │ Notification│   │ Analytics    │
+ │ Service    │   │ Service     │   │ Service      │
+ └────────────┘   └─────────────┘   └──────────────┘
+
+Publisher:
+Order Service
+Publishes:
+OrderCreated Event
+Consumer:
+Inventory Service
+Notification Service
+Analytics Service
+
+                Customer
+                    │
+                    ▼
+
+                Angular UI
+                    │
+                    ▼
+
+              Order Service
+                    │
+                    │ Save Order
+                    ▼
+
+              SQL Database
+
+                    │
+                    │ Publish Event
+                    ▼
+
+             RabbitMQ Exchange
+                    │
+      ┌─────────────┼─────────────┐
+      │             │             │
+      ▼             ▼             ▼
+
+ Inventory      Notification   Analytics
+  Service         Service       Service
+
+ Reduce Stock    Send Email    Update Dashboard
+
+In microservice architecture, asynchronous communication is commonly implemented using message brokers such as RabbitMQ, Kafka or Azure Service Bus. Instead of calling another service directly, a service publishes an event to a broker. Multiple subscriber services consume the event independently. This reduces coupling, improves scalability and increases resilience because the publisher does not need to wait for consumers to complete processing.
+
+Order Service
+      ↓
+OrderCreated Event
+      ↓
+RabbitMQ
+      ↓
+Inventory Service
+      ↓
+InventoryReserved Event
+      ↓
+RabbitMQ
+      ↓
+Payment Service

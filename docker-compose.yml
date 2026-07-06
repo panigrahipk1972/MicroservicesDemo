@@ -1,0 +1,27 @@
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "YourStrong@Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+
+  orderservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: orderapi
+    ports:
+      - "8080:8080"
+    depends_on:
+      - sqlserver
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
