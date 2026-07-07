@@ -10,6 +10,10 @@ builder.Services.AddDbContext<ProductDbContext>(
         options.UseSqlServer(
             builder.Configuration.GetConnectionString(
                 "DefaultConnection")));
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
